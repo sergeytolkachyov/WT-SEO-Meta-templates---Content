@@ -2,7 +2,7 @@
 /**
  * @package     WT SEO Meta templates
  * @subpackage  WT SEO Meta templates - Content
- * @version     1.3.0
+ * @version     1.4.0
  * @Author      Sergey Tolkachyov, https://web-tolk.ru
  * @copyright   Copyright (C) 2022 Sergey Tolkachyov
  * @license     GNU/GPL http://www.gnu.org/licenses/gpl-2.0.html
@@ -16,6 +16,7 @@ use \Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Profiler\Profiler;
+use Joomla\CMS\Filesystem\Folder;
 
 class plgSystemWt_seo_meta_templates_content extends CMSPlugin
 {
@@ -102,9 +103,9 @@ class plgSystemWt_seo_meta_templates_content extends CMSPlugin
 				 */
 				if ($this->params->get('show_debug') == 1)
 				{
-					$this->prepareDebugInfo('','<p><strong>Com_content area</strong>: category</p>');
-					$this->prepareDebugInfo('','<p><strong>Com_content Title</strong>: ' . $category->title . '</p>');
-					$this->prepareDebugInfo('','<p><strong>Com_content Meta desc:</strong> ' . $category->metadesc . '</p>');
+					$this->prepareDebugInfo('', '<p><strong>Com_content area</strong>: category</p>');
+					$this->prepareDebugInfo('', '<p><strong>Com_content Title</strong>: ' . $category->title . '</p>');
+					$this->prepareDebugInfo('', '<p><strong>Com_content Meta desc:</strong> ' . $category->metadesc . '</p>');
 				}
 
 				$category_title_category_exclude = $this->params->get('cc_category_title_category_exclude');
@@ -120,7 +121,7 @@ class plgSystemWt_seo_meta_templates_content extends CMSPlugin
 					// У категорий нет отдельного поля для title
 					if ($this->params->get('show_debug') == 1)
 					{
-						$this->prepareDebugInfo('','<p>'.Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_GLOBAL_CATEGORY_TITLE_REPLACE').'</p>');
+						$this->prepareDebugInfo('', '<p>' . Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_GLOBAL_CATEGORY_TITLE_REPLACE') . '</p>');
 					}
 					$title_template = $this->params->get('content_category_title_template');
 					if (!empty($title_template))
@@ -149,14 +150,14 @@ class plgSystemWt_seo_meta_templates_content extends CMSPlugin
 					{
 						if ($this->params->get('show_debug') == 1)
 						{
-							$this->prepareDebugInfo('','<p>'.Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_GLOBAL_CATEGORY_META_DESCRIPTION_REPLACE_ONLY_EMPTY').'</p>');
+							$this->prepareDebugInfo('', '<p>' . Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_GLOBAL_CATEGORY_META_DESCRIPTION_REPLACE_ONLY_EMPTY') . '</p>');
 						}
 
 						if (empty($category->metadesc) == true)
 						{
 							if ($this->params->get('show_debug') == 1)
 							{
-								$this->prepareDebugInfo('','<p>'.Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_EMPTY_META_DESCRIPTION_FOUND').'</p>');
+								$this->prepareDebugInfo('', '<p>' . Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_EMPTY_META_DESCRIPTION_FOUND') . '</p>');
 							}
 							$description_template = $this->params->get('content_category_meta_description_template');
 
@@ -172,7 +173,7 @@ class plgSystemWt_seo_meta_templates_content extends CMSPlugin
 						//Переписываем все meta description категорий глобально
 						if ($this->params->get('show_debug') == 1)
 						{
-							$this->prepareDebugInfo('','<p>'.Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_GLOBAL_CATEGORY_META_DESCRIPTION_REPLACE').'</p>');
+							$this->prepareDebugInfo('', '<p>' . Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_GLOBAL_CATEGORY_META_DESCRIPTION_REPLACE') . '</p>');
 						}
 						$description_template = $this->params->get('content_category_meta_description_template');
 						if (!empty($description_template))
@@ -195,10 +196,10 @@ class plgSystemWt_seo_meta_templates_content extends CMSPlugin
 
 					if ($this->params->get('enable_page_title_and_metadesc_pagination_suffix') == 1)
 					{
-						$articles_model     = BaseDatabaseModel::getInstance('Articles', 'ContentModel', array('ignore_request' => true));
+						$articles_model = BaseDatabaseModel::getInstance('Articles', 'ContentModel', array('ignore_request' => true));
 						// Get the pagination request variables
 						$app_params = Factory::getApplication()->getParams();
-						$itemid = $app->input->get('id', 0, 'int') . ':' . $app->input->get('Itemid', 0, 'int');
+						$itemid     = $app->input->get('id', 0, 'int') . ':' . $app->input->get('Itemid', 0, 'int');
 
 						if (($app->input->get('layout') === 'blog') || $app_params->get('layout_type') === 'blog')
 						{
@@ -210,7 +211,7 @@ class plgSystemWt_seo_meta_templates_content extends CMSPlugin
 						}
 
 						$num_links = $app_params->get('num_links');
-						$limit = (int) $limit - (int) $num_links;
+						$limit     = (int) $limit - (int) $num_links;
 
 
 						$articles_model->setState('params', $app_params);
@@ -220,7 +221,7 @@ class plgSystemWt_seo_meta_templates_content extends CMSPlugin
 						$articles_model->setState('list.links', $app_params->get('num_links'));
 						$articles_model->setState('filter.published', 1);
 						//теукщая страница пагинации
-						$pagination = $articles_model->getPagination();
+						$pagination                  = $articles_model->getPagination();
 						$current_pagination_page_num = $pagination->pagesCurrent;
 
 						if (!empty($this->params->get('page_title_pagination_suffix_text')))
@@ -266,14 +267,14 @@ class plgSystemWt_seo_meta_templates_content extends CMSPlugin
 			{
 
 				!JDEBUG ?: Profiler::getInstance('Application')->mark('<strong>plg WT SEO Meta templates - com_content provider plugin</strong>: Before load article');
-				$this->prepareDebugInfo('','<p><strong>Com_content area</strong> article</p>');
+				$this->prepareDebugInfo('', '<p><strong>Com_content area</strong> article</p>');
 				$model             = BaseDatabaseModel::getInstance('Article', 'ContentModel');
 				$article           = $model->getItem($id);
 				$article->jcfields = FieldsHelper::getFields("com_content.article", $article, true);
 
 				!JDEBUG ?: Profiler::getInstance('Application')->mark('<strong>plg WT SEO Meta templates - com_content provider plugin</strong>: After load article');
-				$this->prepareDebugInfo('','<p><strong>Com_content Title</strong>: ' . $article->title . '</p>');
-				$this->prepareDebugInfo('','<p><strong>Com_content Meta desc:</strong> ' . $article->metadesc . '</p>');
+				$this->prepareDebugInfo('', '<p><strong>Com_content Title</strong>: ' . $article->title . '</p>');
+				$this->prepareDebugInfo('', '<p><strong>Com_content Meta desc:</strong> ' . $article->metadesc . '</p>');
 				/*
 				 * Com_content article variables for short codes
 				 */
@@ -363,6 +364,17 @@ class plgSystemWt_seo_meta_templates_content extends CMSPlugin
 				{
 					$article_metadesc_category_exclude = array();
 				}
+
+				/**
+				 * Специфичные сео-формулы для материалов конкретной категории
+				 */
+				$custom_templates_for_articles_in_specified_category = array();
+				foreach ($this->params->get('custom_templates_for_articles_in_specified_category') as $custom_template)
+				{
+					$custom_templates_for_articles_in_specified_category[$custom_template->category]['title']    = $custom_template->title;
+					$custom_templates_for_articles_in_specified_category[$custom_template->category]['metadesc'] = $custom_template->metadesc;
+				}
+
 				if ($this->params->get('global_article_title_replace') == 1 && !in_array($article->catid, $article_title_category_exclude))
 				{
 
@@ -375,16 +387,32 @@ class plgSystemWt_seo_meta_templates_content extends CMSPlugin
 					{
 						if ($this->params->get('show_debug') == 1)
 						{
-							$this->prepareDebugInfo('','<p>'.Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_GLOBAL_ARTICLE_TITLE_REPLACE_ONLY_EMPTY').'</p>');
+							$this->prepareDebugInfo('', '<p>' . Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_GLOBAL_ARTICLE_TITLE_REPLACE_ONLY_EMPTY') . '</p>');
 						}
 
 						if (empty($article->params->get('article_page_title')) == true)
 						{
 							if ($this->params->get('show_debug') == 1)
 							{
-								$this->prepareDebugInfo('','<p>'.Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_EMPTY_ARTICLE_TITLE_FOUND').'</p>');
+								$this->prepareDebugInfo('', '<p>' . Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_EMPTY_ARTICLE_TITLE_FOUND') . '</p>');
 							}
-							$title_template = $this->params->get('content_article_title_template');
+
+
+							if (isset($custom_templates_for_articles_in_specified_category[$article->catid]))
+							{
+								// Специфичная сео-формула для материалов данной категории
+								$title_template = $custom_templates_for_articles_in_specified_category[$article->catid]['title'];
+								if ($this->params->get('show_debug') == 1)
+								{
+									$this->prepareDebugInfo('', '<p>' . Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_CUSTOM_TEMPLATE_FOR_ARTICLES_IN_SPECIFIED_CATEGORY_FOUND') . ' - title</p>');
+								}
+							}
+							else
+							{
+								// Глобальная сео-формула для всех материалов
+								$title_template = $this->params->get('content_article_title_template');
+							}
+
 							if (!empty($title_template))
 							{
 								$seo_meta_template['title'] = $title_template;
@@ -396,14 +424,31 @@ class plgSystemWt_seo_meta_templates_content extends CMSPlugin
 						//Переписываем все глобально
 						if ($this->params->get('show_debug') == 1)
 						{
-							$this->prepareDebugInfo('','<p>'.Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_GLOBAL_ARTICLE_TITLE_REPLACE').'</p>');
+							$this->prepareDebugInfo('', '<p>' . Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_GLOBAL_ARTICLE_TITLE_REPLACE') . '</p>');
 						}
-						$title_template = $this->params->get('content_article_title_template');
+
+						if (isset($custom_templates_for_articles_in_specified_category[$article->catid]))
+						{
+							// Специфичная сео-формула для материалов данной категории
+							$title_template = $custom_templates_for_articles_in_specified_category[$article->catid]['title'];
+
+							if ($this->params->get('show_debug') == 1)
+							{
+								$this->prepareDebugInfo('', '<p>' . Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_CUSTOM_TEMPLATE_FOR_ARTICLES_IN_SPECIFIED_CATEGORY_FOUND') . ' - title</p>');
+							}
+
+						}
+						else
+						{
+							// Глобальная сео-формула для всех материалов
+							$title_template = $this->params->get('content_article_title_template');
+						}
 						if (!empty($title_template))
 						{
 							$seo_meta_template['title'] = $title_template;
 						}
 					}
+
 				}
 
 				/*
@@ -422,15 +467,32 @@ class plgSystemWt_seo_meta_templates_content extends CMSPlugin
 					{
 						if ($this->params->get('show_debug') == 1)
 						{
-							$this->prepareDebugInfo('','<p>'.Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_GLOBAL_ARTICLE_META_DESCRIPTION_REPLACE_ONLY_EMPTY').'</p>');
+							$this->prepareDebugInfo('', '<p>' . Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_GLOBAL_ARTICLE_META_DESCRIPTION_REPLACE_ONLY_EMPTY') . '</p>');
 						}
 						if (empty($article->metadesc) == true)
 						{
 							if ($this->params->get('show_debug') == 1)
 							{
-								$this->prepareDebugInfo('','<p>'.Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_EMPTY_ARTICLE_META_DESCRIPTION_FOUND').'</p>');
+								$this->prepareDebugInfo('', '<p>' . Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_EMPTY_ARTICLE_META_DESCRIPTION_FOUND') . '</p>');
 							}
-							$description_template = $this->params->get('content_article_meta_description_template');
+
+							if (isset($custom_templates_for_articles_in_specified_category[$article->catid]))
+							{
+								// Специфичная сео-формула для материалов данной категории
+								$description_template = $custom_templates_for_articles_in_specified_category[$article->catid]['metadesc'];
+								if ($this->params->get('show_debug') == 1)
+								{
+									$this->prepareDebugInfo('', '<p>' . Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_CUSTOM_TEMPLATE_FOR_ARTICLES_IN_SPECIFIED_CATEGORY_FOUND') . ' - meta description</p>');
+								}
+							}
+							else
+							{
+								// Глобальная сео-формула для всех материалов
+								$description_template = $this->params->get('content_article_meta_description_template');
+
+							}
+
+
 							if (!empty($description_template))
 							{
 								$seo_meta_template['description'] = $description_template;
@@ -442,9 +504,25 @@ class plgSystemWt_seo_meta_templates_content extends CMSPlugin
 						//Переписываем все глобально
 						if ($this->params->get('show_debug') == 1)
 						{
-							echo Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_GLOBAL_ARTICLE_TITLE_REPLACE');
+							$this->prepareDebugInfo('', '<p>' . Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_GLOBAL_ARTICLE_TITLE_REPLACE') . '</p>');
+
 						}
-						$description_template = $this->params->get('content_article_meta_description_template');
+						if (isset($custom_templates_for_articles_in_specified_category[$article->catid]))
+						{
+							// Специфичная сео-формула для материалов данной категории
+							$description_template = $custom_templates_for_articles_in_specified_category[$article->catid]['metadesc'];
+							if ($this->params->get('show_debug') == 1)
+							{
+								$this->prepareDebugInfo('', '<p>' . Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_CUSTOM_TEMPLATE_FOR_ARTICLES_IN_SPECIFIED_CATEGORY_FOUND') . ' - meta description</p>');
+							}
+						}
+						else
+						{
+							// Глобальная сео-формула для всех материалов
+							$description_template = $this->params->get('content_article_meta_description_template');
+
+						}
+
 						if (!empty($description_template))
 						{
 							$seo_meta_template['description'] = $description_template;
@@ -456,13 +534,32 @@ class plgSystemWt_seo_meta_templates_content extends CMSPlugin
 			}//elseif ($app->input->get('view') == 'article')
 
 
+			/**
+			 * Include files with custom SEO variables and overrides from
+			 * plugins/system/wt_seo_meta_templates_content/customvariables
+			 */
+			if(Folder::exists(__DIR__.'/customvariables')){
+				$custom_variables = Folder::files(__DIR__.'/customvariables');
+				if ($this->params->get('show_debug') == 1)
+				{
+					$this->prepareDebugInfo('Custom variables folder found',__DIR__.'/customvariables');
+					$this->prepareDebugInfo('Custom variables files found ('.count($custom_variables).')',$custom_variables);
+				}
+				foreach ($custom_variables as $custom_variable)
+				{
+					require_once (__DIR__.'/customvariables/'.$custom_variable);
+				}
+
+			}
+
+
 			$data = array(
 				'variables'          => $variables,
 				'seo_tags_templates' => $seo_meta_template,
 			);
 
 
-			$this->prepareDebugInfo('SEO variables',$data);
+			$this->prepareDebugInfo('SEO variables', $data);
 
 			if ($this->params->get('show_debug') == 1)
 			{
@@ -486,13 +583,14 @@ class plgSystemWt_seo_meta_templates_content extends CMSPlugin
 
 	/**
 	 * Prepare html output for debug info from main function
+	 *
 	 * @param $debug_section_header string
-	 * @param $debug_data string|array
+	 * @param $debug_data           string|array
 	 *
 	 * @return void
 	 * @since 1.3.0
 	 */
-	private function prepareDebugInfo($debug_section_header, $debug_data):void
+	private function prepareDebugInfo($debug_section_header, $debug_data): void
 	{
 		if ($this->params->get('show_debug') == 1)
 		{

@@ -72,7 +72,7 @@ class JFormFieldPlugininfo extends JFormFieldSpacer
 
 		?>
 		<div class="wt-b24-plugin-info">
-            <div class="plugin-info-img span2">
+            <div class="plugin-info-img span2 col-2">
 				<a href="https://web-tolk.ru" target="_blank">
 							<svg width="200" height="50" xmlns="http://www.w3.org/2000/svg">
 								 <g>
@@ -83,8 +83,8 @@ class JFormFieldPlugininfo extends JFormFieldSpacer
 							</svg>
 				</a>
             </div>
-			<div style="padding: 0px 15px;" class="span10">
-				<span class="label label-success">v.<?php echo $wt_plugin_info->version; ?></span>
+			<div style="padding: 0px 15px;" class="span10 col-10">
+				<span class="badge badge-success bg-success">v.<?php echo $wt_plugin_info->version; ?></span>
 				<?php echo Text::_("PLG_".strtoupper($element)."_DESC"); ?>
 			</div>
 		</div>

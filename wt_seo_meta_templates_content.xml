@@ -1,19 +1,20 @@
 <?xml version="1.0"?>
-<extension type="plugin" version="3.9" method="upgrade" group="system">
+<extension type="plugin" version="3.10" method="upgrade" group="system">
     <name>System - WT SEO Meta templates - Content</name>
     <author>Sergey Tolkachyov</author>
     <authorEmail>info@web-tolk.ru</authorEmail>
     <authorUrl>https://web-tolk.ru/</authorUrl>
-	<creationDate>31/01/2022</creationDate>
+	<creationDate>11/03/2022</creationDate>
     <copyright>Sergey Tolkachyov</copyright>
     <license>GNU General Public License v3.0</license>
-    <version>1.3.0</version>
+    <version>1.4.0</version>
     <description>Joomla com_content plugin for WT SEO Meta templates</description>
 	<scriptfile>script.php</scriptfile>
     <files>
         <filename plugin="wt_seo_meta_templates_content">wt_seo_meta_templates_content.php</filename>
         <folder>language</folder>
         <folder>fields</folder>
+        <folder>subform</folder>
     </files>
 	<languages folder="language" client="administrator">
         <language tag="en-GB">en-GB/en-GB.plg_system_wt_seo_meta_templates_content.ini</language>
@@ -25,7 +26,7 @@
         <fields name="params">
             <fieldset name="basic">
                 <field addfieldpath="plugins/system/wt_seo_meta_templates_content/fields" type="plugininfo" name="plugininfo"/>
-                <field type="spacer" label="PLG_WT_SEO_META_TEMPLATES_CONTENT_DESCRIPTION"/>
+                <field type="note" description="PLG_WT_SEO_META_TEMPLATES_CONTENT_DESCRIPTION" class="alert alert-info"/>
 
                 <field type="spacer" label="PLG_WT_SEO_META_TEMPLATES_CONTENT_SHOW_DEBUG_HEADER"/>
                 <field type="radio"
@@ -39,7 +40,7 @@
             </fieldset>
             <fieldset name="category">
                 <field type="spacer" label="PLG_WT_SEO_META_TEMPLATES_CONTENT_CATEGORIES_HEADER"/>
-                <field type="spacer" label="PLG_WT_SEO_META_TEMPLATES_CONTENT_CATEGORY_VARIABLES"/>
+                <field type="note" label="PLG_WT_SEO_META_TEMPLATES_CONTENT_CATEGORY_VARIABLES_HEADER" description="PLG_WT_SEO_META_TEMPLATES_CONTENT_CATEGORY_VARIABLES"/>
                 <field type="spacer" label="PLG_WT_SEO_META_TEMPLATES_CONTENT_CATEGORIES_TITLE_HEADER"/>
                 <!--                com_content category-->
                 <field type="radio"
@@ -97,7 +98,7 @@
             <fieldset name="article">
 <!--                com_content article-->
                 <field type="spacer" label="PLG_WT_SEO_META_TEMPLATES_CONTENT_ARTICLE_HEADER"/>
-                <field type="spacer" label="PLG_WT_SEO_META_TEMPLATES_CONTENT_ARTICLE_VARIABLES"/>
+                <field type="note" label="PLG_WT_SEO_META_TEMPLATES_CONTENT_ARTICLE_VARIABLES_HEADER" description="PLG_WT_SEO_META_TEMPLATES_CONTENT_ARTICLE_VARIABLES"/>
                 <field type="number" label="PLG_WT_SEO_META_TEMPLATES_CONTENT_INTRO_TEXT_MAX_CHARS" name="cc_article_intro_text_max_chars" default="200"/>
                 <field type="spacer" label="PLG_WT_SEO_META_TEMPLATES_CONTENT_ARTICLE_TITLE_HEADER"/>
                 <field type="radio"
@@ -121,7 +122,7 @@
                        name="content_article_title_template"
                        label="PLG_WT_SEO_META_TEMPLATES_CONTENT_ARTICLE_TITLE_TEMPLATE"
                        rows="3"
-                       class="span8"
+                       class="span8 col-8"
                        showon="global_article_title_replace:1"/>
                 <field type="category"
                        name="cc_article_title_category_exclude"
@@ -129,6 +130,7 @@
                        label="PLG_WT_SEO_META_TEMPLATES_CONTENT_ARTICLE_TITLE_CATEGORY_EXCLUDE"
                        multiple="true"
                        showon="global_article_title_replace:1"/>
+
 <!-- Meta-description материала-->
                 <field type="spacer" label="PLG_WT_SEO_META_TEMPLATES_CONTENT_ARTICLE_META_DESCRIPTION_HEADER"/>
                 <field type="radio"
@@ -163,7 +165,17 @@
 
 
             </fieldset>
-
+            <fieldset name="custom_template_for_articles_in_specified_category">
+                <field type="note" label="COM_PLUGINS_CUSTOM_TEMPLATE_FOR_ARTICLES_IN_SPECIFIED_CATEGORY_HEADER" description="COM_PLUGINS_CUSTOM_TEMPLATE_FOR_ARTICLES_IN_SPECIFIED_CATEGORY_DESC" class="alert alert-info"/>
+                <field name="custom_templates_for_articles_in_specified_category"
+                       label="PLG_WT_SEO_META_TEMPLATES_CONTENT_CUSTOM_TEMPLATE_FOR_ARTICLES_IN_SPECIFIED_CATEGORY"
+                       type="subform"
+                       layout="joomla.form.field.subform.repeatable-table"
+                       formsource="plugins/system/wt_seo_meta_templates_content/subform/custom_template_for_articles_in_specified_category.xml"
+                       multiple="true"
+                       buttons="add,remove"
+                />
+            </fieldset>
             <fieldset name="PAGINATION">
                 <!-- Пагинация-->
                 <field type="note" label="PLG_WT_SEO_META_TEMPLATES_CONTENT_PAGINATION_DESC_HEADER" description="PLG_WT_SEO_META_TEMPLATES_CONTENT_PAGINATION_DESC" class="alert alert-info"/>
