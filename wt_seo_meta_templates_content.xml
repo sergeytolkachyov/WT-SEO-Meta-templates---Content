@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
-<extension type="plugin" version="3.10" method="upgrade" group="system">
+<extension type="plugin" version="4.1" method="upgrade" group="system">
     <name>System - WT SEO Meta templates - Content</name>
     <author>Sergey Tolkachyov</author>
     <authorEmail>info@web-tolk.ru</authorEmail>
     <authorUrl>https://web-tolk.ru/</authorUrl>
-	<creationDate>11/03/2022</creationDate>
+	<creationDate>12/04/2022</creationDate>
     <copyright>Sergey Tolkachyov</copyright>
     <license>GNU General Public License v3.0</license>
-    <version>1.4.0</version>
+    <version>1.4.1</version>
     <description>Joomla com_content plugin for WT SEO Meta templates</description>
 	<scriptfile>script.php</scriptfile>
     <files>
@@ -198,6 +198,9 @@
                        label="PLG_WT_SEO_META_TEMPLATES_CONTENT_PAGE_METADESC_PAGINATION_SUFFIX_TEXT"
                        showon="enable_page_title_and_metadesc_pagination_suffix:1"
                        default="WT_SEO_META_TEMPLTATES_PAGIN_META_DESC_SFX"/>
+            </fieldset>
+            <fieldset name="custom_varibales">
+                <field type="note" label="PLG_WT_SEO_META_TEMPLATES_CONTENT_CUSTOM_VARIBALES_LABEL" description="PLG_WT_SEO_META_TEMPLATES_CONTENT_CUSTOM_VARIBALES_DESC"/>
             </fieldset>
         </fields>
     </config>
