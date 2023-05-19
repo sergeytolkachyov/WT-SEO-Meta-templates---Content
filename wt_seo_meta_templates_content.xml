@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<extension type="plugin" version="4.1" method="upgrade" group="system">
+<extension type="plugin" method="upgrade" group="system">
     <name>System - WT SEO Meta templates - Content</name>
     <author>Sergey Tolkachyov</author>
     <authorEmail>info@web-tolk.ru</authorEmail>
