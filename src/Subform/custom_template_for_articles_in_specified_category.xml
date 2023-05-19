@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+   <field type="category"
+          name="category"
+          label="PLG_WT_SEO_META_TEMPLATES_CONTENT_CUSTOM_TEMPLATES_FOR_ARTICLES_IN_SPECIFIED_CATEGORY_CATEGORY"
+          extension="com_content"/>
+    <field type="text"
+           name="title"
+           label="PLG_WT_SEO_META_TEMPLATES_CONTENT_CUSTOM_TEMPLATES_FOR_ARTICLES_IN_SPECIFIED_CATEGORY_TITLE"/>
+    <field type="text"
+           name="metadesc"
+           label="PLG_WT_SEO_META_TEMPLATES_CONTENT_CUSTOM_TEMPLATES_FOR_ARTICLES_IN_SPECIFIED_CATEGORY_METADESC"/>
+</form>

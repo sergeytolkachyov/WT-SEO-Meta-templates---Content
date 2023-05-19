@@ -4,39 +4,29 @@
     <author>Sergey Tolkachyov</author>
     <authorEmail>info@web-tolk.ru</authorEmail>
     <authorUrl>https://web-tolk.ru/</authorUrl>
-	<creationDate>12/04/2022</creationDate>
+	<creationDate>19/05/2023</creationDate>
     <copyright>Sergey Tolkachyov</copyright>
     <license>GNU General Public License v3.0</license>
-    <version>1.4.1</version>
+    <version>2.0.0</version>
     <description>Joomla com_content plugin for WT SEO Meta templates</description>
+    <namespace path="src">Joomla\Plugin\System\Wt_seo_meta_templates_content</namespace>
 	<scriptfile>script.php</scriptfile>
     <files>
-        <filename plugin="wt_seo_meta_templates_content">wt_seo_meta_templates_content.php</filename>
+        <folder plugin="wt_seo_meta_templates_content">src</folder>
+        <folder>services</folder>
         <folder>language</folder>
-        <folder>fields</folder>
-        <folder>subform</folder>
     </files>
 	<languages folder="language" client="administrator">
-        <language tag="en-GB">en-GB/en-GB.plg_system_wt_seo_meta_templates_content.ini</language>
-        <language tag="ru-RU">ru-RU/ru-RU.plg_system_wt_seo_meta_templates_content.ini</language>
-        <language tag="en-GB">en-GB/en-GB.plg_system_wt_seo_meta_templates_content.sys.ini</language>
-        <language tag="ru-RU">ru-RU/ru-RU.plg_system_wt_seo_meta_templates_content.sys.ini</language>
+        <language tag="en-GB">en-GB/plg_system_wt_seo_meta_templates_content.ini</language>
+        <language tag="ru-RU">ru-RU/plg_system_wt_seo_meta_templates_content.ini</language>
+        <language tag="en-GB">en-GB/plg_system_wt_seo_meta_templates_content.sys.ini</language>
+        <language tag="ru-RU">ru-RU/plg_system_wt_seo_meta_templates_content.sys.ini</language>
     </languages>
        <config>
         <fields name="params">
             <fieldset name="basic">
-                <field addfieldpath="plugins/system/wt_seo_meta_templates_content/fields" type="plugininfo" name="plugininfo"/>
+                <field addfieldprefix="Joomla\Plugin\System\Wt_seo_meta_templates_content\Fields" type="plugininfo" name="plugininfo"/>
                 <field type="note" description="PLG_WT_SEO_META_TEMPLATES_CONTENT_DESCRIPTION" class="alert alert-info"/>
-
-                <field type="spacer" label="PLG_WT_SEO_META_TEMPLATES_CONTENT_SHOW_DEBUG_HEADER"/>
-                <field type="radio"
-                       name="show_debug"
-                       label="PLG_WT_SEO_META_TEMPLATES_CONTENT_SHOW_DEBUG"
-                       class="btn-group btn-group-yesno"
-                       default="0">
-                    <option value="1">JYES</option>
-                    <option value="0">JNO</option>
-                </field>
             </fieldset>
             <fieldset name="category">
                 <field type="spacer" label="PLG_WT_SEO_META_TEMPLATES_CONTENT_CATEGORIES_HEADER"/>
@@ -55,7 +45,6 @@
                        name="content_category_title_template"
                        label="PLG_WT_SEO_META_TEMPLATES_CONTENT_CATEGORY_TITLE_TEMPLATE"
                        rows="3"
-                       class="span8"
                        showon="global_cc_category_title_replace:1"/>
                 <field type="category"
                        name="cc_category_title_category_exclude"
@@ -86,7 +75,7 @@
                        name="content_category_meta_description_template"
                        label="PLG_WT_SEO_META_TEMPLATES_CONTENT_CATEGORY_META_DESCRIPTION_TEMPLATE"
                        rows="3"
-                       class="span8"
+                       class="col-md-8"
                        showon="global_cc_category_description_replace:1"/>
                 <field type="category"
                        name="cc_category_metadesc_category_exclude"
@@ -122,7 +111,7 @@
                        name="content_article_title_template"
                        label="PLG_WT_SEO_META_TEMPLATES_CONTENT_ARTICLE_TITLE_TEMPLATE"
                        rows="3"
-                       class="span8 col-8"
+                       class="col-md-8 col-8"
                        showon="global_article_title_replace:1"/>
                 <field type="category"
                        name="cc_article_title_category_exclude"
@@ -154,7 +143,7 @@
                        name="content_article_meta_description_template"
                        label="PLG_WT_SEO_META_TEMPLATES_CONTENT_ARTICLE_META_DESCRIPTION_TEMPLATE"
                        rows="3"
-                       class="span8"
+                       class="col-md-8"
                        showon="global_article_meta_description_replace:1"/>
                 <field type="category"
                        name="cc_article_metadesc_category_exclude"
@@ -170,13 +159,14 @@
                 <field name="custom_templates_for_articles_in_specified_category"
                        label="PLG_WT_SEO_META_TEMPLATES_CONTENT_CUSTOM_TEMPLATE_FOR_ARTICLES_IN_SPECIFIED_CATEGORY"
                        type="subform"
+                       parentclass="stack"
                        layout="joomla.form.field.subform.repeatable-table"
-                       formsource="plugins/system/wt_seo_meta_templates_content/subform/custom_template_for_articles_in_specified_category.xml"
+                       formsource="plugins/system/wt_seo_meta_templates_content/src/Subform/custom_template_for_articles_in_specified_category.xml"
                        multiple="true"
                        buttons="add,remove"
                 />
             </fieldset>
-            <fieldset name="PAGINATION">
+            <fieldset name="pagination" label="PLG_WT_SEO_META_TEMPLATES_CONTENT_PAGINATION_DESC_HEADER">
                 <!-- Пагинация-->
                 <field type="note" label="PLG_WT_SEO_META_TEMPLATES_CONTENT_PAGINATION_DESC_HEADER" description="PLG_WT_SEO_META_TEMPLATES_CONTENT_PAGINATION_DESC" class="alert alert-info"/>
                 <field type="spacer" label="PLG_WT_SEO_META_TEMPLATES_CONTENT_PAGE_TITLE_PAGINATION_HEADER"/>
