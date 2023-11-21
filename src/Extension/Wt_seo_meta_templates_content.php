@@ -44,8 +44,6 @@ class Wt_seo_meta_templates_content extends CMSPlugin implements SubscriberInter
 
 	protected $allowLegacyListeners = false;
 
-	public $iterator = 0;
-
 	/**
 	 * @inheritDoc
 	 *
