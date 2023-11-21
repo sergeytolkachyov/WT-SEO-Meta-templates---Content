@@ -3,7 +3,7 @@
 /**
  * @package     WT SEO Meta templates
  * @subpackage  WT SEO Meta templates - Content
- * @version     2.0.0
+ * @version     2.0.1
  * @Author      Sergey Tolkachyov, https://web-tolk.ru
  * @copyright   Copyright (C) 2022 Sergey Tolkachyov
  * @license     GNU/GPL http://www.gnu.org/licenses/gpl-2.0.html
@@ -22,9 +22,10 @@ use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Profiler\Profiler;
 use Joomla\CMS\Filesystem\Folder;
 use Joomla\Component\Fields\Administrator\Helper\FieldsHelper;
+use Joomla\Event\SubscriberInterface;
 use Joomla\Registry\Registry;
 
-class Wt_seo_meta_templates_content extends CMSPlugin
+class Wt_seo_meta_templates_content extends CMSPlugin implements SubscriberInterface
 {
     /**
      * Load the language file on instantiation.
@@ -41,6 +42,26 @@ class Wt_seo_meta_templates_content extends CMSPlugin
      */
     protected $show_debug = false;
 
+	protected $allowLegacyListeners = false;
+
+	public $iterator = 0;
+
+	/**
+	 * @inheritDoc
+	 *
+	 * @return string[]
+	 *
+	 * @throws \Exception
+	 * @since 4.1.0
+	 *
+	 */
+	public static function getSubscribedEvents(): array
+	{
+		return [
+			'onWt_seo_meta_templatesAddVariables' => 'onWt_seo_meta_templatesAddVariables'
+		];
+	}
+
     public function __construct(&$subject, $config)
     {
         parent::__construct($subject, $config);
@@ -51,7 +72,7 @@ class Wt_seo_meta_templates_content extends CMSPlugin
         }
     }
 
-    public function onWt_seo_meta_templatesAddVariables()
+    public function onWt_seo_meta_templatesAddVariables($event)
     {
         !JDEBUG ?: Profiler::getInstance('Application')->mark('<strong>plg WT SEO Meta templates - com_content provider plugin</strong>: start');
         $app = Factory::getApplication();
@@ -122,7 +143,6 @@ class Wt_seo_meta_templates_content extends CMSPlugin
 
                 }
 
-
                 /**
                  * Если включена глобальная перезапись <title> категории. Все по формуле.
                  */
@@ -149,6 +169,7 @@ class Wt_seo_meta_templates_content extends CMSPlugin
                         $seo_meta_template['title'] = $title_template;
                     }
                 }
+
                 /*
                  * Если включена глобальная перезапись description категории. Все по формуле.
                  */
@@ -485,9 +506,8 @@ class Wt_seo_meta_templates_content extends CMSPlugin
 
             !JDEBUG ?: Profiler::getInstance('Application')->mark('<strong>plg WT SEO Meta templates - com_content provider plugin</strong>: Before return data. End.');
 
-            return $data;
+            $event->setArgument('result',$data);
         }
-        return;
     }
 
     /**
