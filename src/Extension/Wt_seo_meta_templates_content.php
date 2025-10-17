@@ -1,9 +1,8 @@
 <?php
-
 /**
  * @package     WT SEO Meta templates
  * @subpackage  WT SEO Meta templates - Content
- * @version     2.0.1
+ * @version     2.0.2
  * @Author      Sergey Tolkachyov, https://web-tolk.ru
  * @copyright   Copyright (C) 2022 Sergey Tolkachyov
  * @license     GNU/GPL http://www.gnu.org/licenses/gpl-2.0.html
@@ -11,38 +10,37 @@
  */
 
 namespace Joomla\Plugin\System\Wt_seo_meta_templates_content\Extension;
-// No direct access
-defined('_JEXEC') or die;
 
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Plugin\CMSPlugin;
-use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Profiler\Profiler;
-use Joomla\CMS\Filesystem\Folder;
 use Joomla\Component\Fields\Administrator\Helper\FieldsHelper;
 use Joomla\Event\SubscriberInterface;
+use Joomla\Filesystem\Folder;
 use Joomla\Registry\Registry;
 
-class Wt_seo_meta_templates_content extends CMSPlugin implements SubscriberInterface
+// No direct access
+\defined('_JEXEC') or die;
+
+final class Wt_seo_meta_templates_content extends CMSPlugin implements SubscriberInterface
 {
 	/**
 	 * Load the language file on instantiation.
 	 *
-	 * @var  $autoloadLanguage  boolean
+	 * @var bool $autoloadLanguage
 	 *
 	 * @since  3.9.0
 	 */
 	protected $autoloadLanguage = true;
 
 	/**
-	 * @var $show_debug boolean Show debug flag
+	 * @var bool $show_debug Show debug flag
 	 * @since 1.0.0
 	 */
-	protected $show_debug = false;
+	protected bool $show_debug = false;
 
-	protected $allowLegacyListeners = false;
 
 	/**
 	 * @inheritDoc
@@ -74,7 +72,7 @@ class Wt_seo_meta_templates_content extends CMSPlugin implements SubscriberInter
 	public function onWt_seo_meta_templatesAddVariables($event): void
 	{
 		!JDEBUG ?: Profiler::getInstance('Application')->mark('<strong>plg WT SEO Meta templates - com_content provider plugin</strong>: start');
-		$app    = Factory::getApplication();
+		$app    = $this->getApplication();
 		$option = $app->getInput()->get('option');
 		$id     = $app->getInput()->get('id');
 
@@ -82,9 +80,9 @@ class Wt_seo_meta_templates_content extends CMSPlugin implements SubscriberInter
 		{
 
 			!JDEBUG ?: Profiler::getInstance('Application')->mark('<strong>plg WT SEO Meta templates - com_content provider plugin</strong>: After load Field helper');
-			$variables = array();
+			$variables = [];
 			//Массив для тайтлов и дескрипшнов по формуле для передачи в основной плагин
-			$seo_meta_template = array();
+			$seo_meta_template = [];
 			// Short codes for com_content category view
 			if ($app->getInput()->get('view') == 'category')
 			{
@@ -93,9 +91,12 @@ class Wt_seo_meta_templates_content extends CMSPlugin implements SubscriberInter
 				/**
 				 * @var \Joomla\Component\Content\Site\Model\CategoryModel $model `ignore_request = false` - we get a current model instance with populateState(). If `ignore_request = true` - populateState() will be ignored
 				 */
-				$model              = $app->bootComponent('com_content')
+				$model = $app->bootComponent('com_content')
 					->getMVCFactory()
 					->createModel('Category', 'Site', ['ignore_request' => false]);
+				// Trick due to bug in core populateState() method
+				// @see https://github.com/joomla/joomla-cms/issues/46311
+				$model->getState('category.id');
 				$category           = $model->getCategory();
 				$category->jcfields = FieldsHelper::getFields("com_content.categories", $category, true);
 
@@ -148,7 +149,7 @@ class Wt_seo_meta_templates_content extends CMSPlugin implements SubscriberInter
 				/**
 				 * Если включена глобальная перезапись <title> категории. Все по формуле.
 				 */
-				if ($this->show_debug == true)
+				if ($this->show_debug)
 				{
 					$this->prepareDebugInfo('', '<p><strong>Com_content area</strong>: category</p>');
 					$this->prepareDebugInfo('', '<p><strong>Com_content Title</strong>: ' . $category->title . '</p>');
@@ -158,7 +159,7 @@ class Wt_seo_meta_templates_content extends CMSPlugin implements SubscriberInter
 				$category_title_category_exclude = $this->params->get('cc_category_title_category_exclude');
 				if (!is_array($category_title_category_exclude))
 				{
-					$category_title_category_exclude = array();
+					$category_title_category_exclude = [];
 				}
 
 				if ($this->params->get('global_cc_category_title_replace') == 1 && !in_array($category->id, $category_title_category_exclude))
@@ -166,7 +167,7 @@ class Wt_seo_meta_templates_content extends CMSPlugin implements SubscriberInter
 
 					// Переписываем все title категорий глобально
 					// У категорий нет отдельного поля для title
-					if ($this->show_debug == true)
+					if ($this->show_debug)
 					{
 						$this->prepareDebugInfo('', '<p>' . Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_GLOBAL_CATEGORY_TITLE_REPLACE') . '</p>');
 					}
@@ -184,7 +185,7 @@ class Wt_seo_meta_templates_content extends CMSPlugin implements SubscriberInter
 				$category_metadesc_category_exclude = $this->params->get('cc_category_metadesc_category_exclude');
 				if (!is_array($category_metadesc_category_exclude))
 				{
-					$category_metadesc_category_exclude = array();
+					$category_metadesc_category_exclude = [];
 				}
 				if ($this->params->get('global_cc_category_description_replace') == 1 && !in_array($category->id, $category_metadesc_category_exclude))
 				{
@@ -196,14 +197,14 @@ class Wt_seo_meta_templates_content extends CMSPlugin implements SubscriberInter
 
 					if ($this->params->get('global_cc_category_description_replace_only_empty') == 1)
 					{
-						if ($this->show_debug == true)
+						if ($this->show_debug)
 						{
 							$this->prepareDebugInfo('', '<p>' . Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_GLOBAL_CATEGORY_META_DESCRIPTION_REPLACE_ONLY_EMPTY') . '</p>');
 						}
 
-						if (empty($category->metadesc) == true)
+						if (empty($category->metadesc))
 						{
-							if ($this->show_debug == true)
+							if ($this->show_debug)
 							{
 								$this->prepareDebugInfo('', '<p>' . Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_EMPTY_META_DESCRIPTION_FOUND') . '</p>');
 							}
@@ -219,7 +220,7 @@ class Wt_seo_meta_templates_content extends CMSPlugin implements SubscriberInter
 					else
 					{
 						//Переписываем все meta description категорий глобально
-						if ($this->show_debug == true)
+						if ($this->show_debug)
 						{
 							$this->prepareDebugInfo('', '<p>' . Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_GLOBAL_CATEGORY_META_DESCRIPTION_REPLACE') . '</p>');
 						}
@@ -244,7 +245,7 @@ class Wt_seo_meta_templates_content extends CMSPlugin implements SubscriberInter
 
 					$model->getItems();
 
-					//теукщая страница пагинации
+					//текущая страница пагинации
 					$pagination                  = $model->getPagination();
 					$current_pagination_page_num = $pagination->pagesCurrent;
 
@@ -281,6 +282,7 @@ class Wt_seo_meta_templates_content extends CMSPlugin implements SubscriberInter
 				$model             = $app->bootComponent('com_content')
 					->getMVCFactory()
 					->createModel('Article', 'Site', ['ignore_request' => false]);
+
 				$article           = $model->getItem($id);
 				$article->jcfields = FieldsHelper::getFields("com_content.article", $article, true);
 
@@ -325,7 +327,7 @@ class Wt_seo_meta_templates_content extends CMSPlugin implements SubscriberInter
 
 					$article_intro_text = HTMLHelper::_('content.prepare', $article->introtext, '', 'com_content.article');
 					$article_intro_text = trim(strip_tags(html_entity_decode($article_intro_text, ENT_QUOTES, 'UTF-8')));
-					$article_intro_text = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '   '), ' ', $article_intro_text);
+					$article_intro_text = str_replace(["\r\n", "\r", "\n", "\t", '  ', '   '], ' ', $article_intro_text);
 
 					if ($intro_text_max_lenght > 3)
 					{
@@ -371,18 +373,18 @@ class Wt_seo_meta_templates_content extends CMSPlugin implements SubscriberInter
 				$article_title_category_exclude = $this->params->get('cc_article_title_category_exclude');
 				if (!is_array($article_title_category_exclude))
 				{
-					$article_title_category_exclude = array();
+					$article_title_category_exclude = [];
 				}
 				$article_metadesc_category_exclude = $this->params->get('cc_article_metadesc_category_exclude');
 				if (!is_array($article_metadesc_category_exclude))
 				{
-					$article_metadesc_category_exclude = array();
+					$article_metadesc_category_exclude = [];
 				}
 
 				/**
 				 * Специфичные сео-формулы для материалов конкретной категории
 				 */
-				$custom_templates_for_articles_in_specified_category = array();
+				$custom_templates_for_articles_in_specified_category = [];
 				foreach ($this->params->get('custom_templates_for_articles_in_specified_category') as $custom_template)
 				{
 					$custom_templates_for_articles_in_specified_category[$custom_template->category]['title']    = $custom_template->title;
@@ -399,14 +401,14 @@ class Wt_seo_meta_templates_content extends CMSPlugin implements SubscriberInter
 
 					if ($this->params->get('global_article_title_replace_only_empty') == 1)
 					{
-						if ($this->show_debug == true)
+						if ($this->show_debug)
 						{
 							$this->prepareDebugInfo('', '<p>' . Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_GLOBAL_ARTICLE_TITLE_REPLACE_ONLY_EMPTY') . '</p>');
 						}
 
 						if (empty($article->params->get('article_page_title')) == true)
 						{
-							if ($this->show_debug == true)
+							if ($this->show_debug)
 							{
 								$this->prepareDebugInfo('', '<p>' . Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_EMPTY_ARTICLE_TITLE_FOUND') . '</p>');
 							}
@@ -416,7 +418,7 @@ class Wt_seo_meta_templates_content extends CMSPlugin implements SubscriberInter
 							{
 								// Специфичная сео-формула для материалов данной категории
 								$title_template = $custom_templates_for_articles_in_specified_category[$article->catid]['title'];
-								if ($this->show_debug == true)
+								if ($this->show_debug)
 								{
 									$this->prepareDebugInfo('', '<p>' . Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_CUSTOM_TEMPLATE_FOR_ARTICLES_IN_SPECIFIED_CATEGORY_FOUND') . ' - title</p>');
 								}
@@ -436,7 +438,7 @@ class Wt_seo_meta_templates_content extends CMSPlugin implements SubscriberInter
 					else
 					{
 						//Переписываем все глобально
-						if ($this->show_debug == true)
+						if ($this->show_debug)
 						{
 							$this->prepareDebugInfo('', '<p>' . Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_GLOBAL_ARTICLE_TITLE_REPLACE') . '</p>');
 						}
@@ -446,7 +448,7 @@ class Wt_seo_meta_templates_content extends CMSPlugin implements SubscriberInter
 							// Специфичная сео-формула для материалов данной категории
 							$title_template = $custom_templates_for_articles_in_specified_category[$article->catid]['title'];
 
-							if ($this->show_debug == true)
+							if ($this->show_debug)
 							{
 								$this->prepareDebugInfo('', '<p>' . Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_CUSTOM_TEMPLATE_FOR_ARTICLES_IN_SPECIFIED_CATEGORY_FOUND') . ' - title</p>');
 							}
@@ -479,13 +481,13 @@ class Wt_seo_meta_templates_content extends CMSPlugin implements SubscriberInter
 
 					if ($this->params->get('global_article_meta_description_replace_only_empty') == 1)
 					{
-						if ($this->show_debug == true)
+						if ($this->show_debug)
 						{
 							$this->prepareDebugInfo('', '<p>' . Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_GLOBAL_ARTICLE_META_DESCRIPTION_REPLACE_ONLY_EMPTY') . '</p>');
 						}
 						if (empty($article->metadesc) == true)
 						{
-							if ($this->show_debug == true)
+							if ($this->show_debug)
 							{
 								$this->prepareDebugInfo('', '<p>' . Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_EMPTY_ARTICLE_META_DESCRIPTION_FOUND') . '</p>');
 							}
@@ -494,7 +496,7 @@ class Wt_seo_meta_templates_content extends CMSPlugin implements SubscriberInter
 							{
 								// Специфичная сео-формула для материалов данной категории
 								$description_template = $custom_templates_for_articles_in_specified_category[$article->catid]['metadesc'];
-								if ($this->show_debug == true)
+								if ($this->show_debug)
 								{
 									$this->prepareDebugInfo('', '<p>' . Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_CUSTOM_TEMPLATE_FOR_ARTICLES_IN_SPECIFIED_CATEGORY_FOUND') . ' - meta description</p>');
 								}
@@ -516,7 +518,7 @@ class Wt_seo_meta_templates_content extends CMSPlugin implements SubscriberInter
 					else
 					{
 						//Переписываем все глобально
-						if ($this->show_debug == true)
+						if ($this->show_debug)
 						{
 							$this->prepareDebugInfo('', '<p>' . Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_GLOBAL_ARTICLE_TITLE_REPLACE') . '</p>');
 
@@ -525,7 +527,7 @@ class Wt_seo_meta_templates_content extends CMSPlugin implements SubscriberInter
 						{
 							// Специфичная сео-формула для материалов данной категории
 							$description_template = $custom_templates_for_articles_in_specified_category[$article->catid]['metadesc'];
-							if ($this->show_debug == true)
+							if ($this->show_debug)
 							{
 								$this->prepareDebugInfo('', '<p>' . Text::_('PLG_WT_SEO_META_TEMPLATES_CONTENT_DEBUG_CUSTOM_TEMPLATE_FOR_ARTICLES_IN_SPECIFIED_CATEGORY_FOUND') . ' - meta description</p>');
 							}
@@ -549,10 +551,10 @@ class Wt_seo_meta_templates_content extends CMSPlugin implements SubscriberInter
 			 * Include files with custom SEO variables and overrides from
 			 * plugins/system/wt_seo_meta_templates_content/customvariables
 			 */
-			if (Folder::exists(__DIR__ . '/customvariables'))
+			if (\is_dir(__DIR__ . '/customvariables'))
 			{
 				$custom_variables = Folder::files(__DIR__ . '/customvariables');
-				if ($this->show_debug == true)
+				if ($this->show_debug)
 				{
 					$this->prepareDebugInfo('Custom variables folder found', __DIR__ . '/customvariables');
 					$this->prepareDebugInfo('Custom variables files found (' . count($custom_variables) . ')', $custom_variables);
@@ -564,12 +566,10 @@ class Wt_seo_meta_templates_content extends CMSPlugin implements SubscriberInter
 
 			}
 
-
-			$data = array(
+			$data = [
 				'variables'          => $variables,
 				'seo_tags_templates' => $seo_meta_template,
-			);
-
+			];
 
 			$this->prepareDebugInfo('SEO variables', $data);
 
@@ -582,17 +582,18 @@ class Wt_seo_meta_templates_content extends CMSPlugin implements SubscriberInter
 	/**
 	 * Prepare html output for debug info from main function
 	 *
-	 * @param $debug_section_header string
-	 * @param $debug_data           string|array
+	 * @param string $debug_section_header
+	 * @param string|array $debug_data
 	 *
 	 * @return void
+	 * @throws \Exception
 	 * @since 1.3.0
 	 */
-	private function prepareDebugInfo($debug_section_header, $debug_data): void
+	private function prepareDebugInfo(string $debug_section_header, $debug_data): void
 	{
-		if ($this->show_debug == true)
+		if ($this->show_debug)
 		{
-			$session      = Factory::getApplication()->getSession();
+			$session      = $this->getApplication()->getSession();
 			$debug_output = $session->get("wtseometatemplatesdebugoutput");
 			if (!empty($debug_section_header))
 			{
@@ -600,14 +601,14 @@ class Wt_seo_meta_templates_content extends CMSPlugin implements SubscriberInter
 				$debug_output .= "<summary style='background-color:#384148; color:#fff; padding:10px;'>" . $debug_section_header . "</summary>";
 			}
 
-			if (is_array($debug_data) || is_object($debug_data))
+			if (is_array($debug_data))
 			{
 				$debug_data   = print_r($debug_data, true);
 				$debug_output .= "<pre style='background-color: #eee; padding:10px;'>";
 			}
 
 			$debug_output .= $debug_data;
-			if (is_array($debug_data) || is_object($debug_data))
+			if (is_array($debug_data))
 			{
 				$debug_output .= "</pre>";
 			}

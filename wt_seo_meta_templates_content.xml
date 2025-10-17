@@ -4,10 +4,10 @@
     <author>Sergey Tolkachyov</author>
     <authorEmail>info@web-tolk.ru</authorEmail>
     <authorUrl>https://web-tolk.ru/</authorUrl>
-	<creationDate>November 2023</creationDate>
+	<creationDate>October 2025</creationDate>
     <copyright>Sergey Tolkachyov</copyright>
     <license>GNU General Public License v3.0</license>
-    <version>2.0.1</version>
+    <version>2.0.2</version>
     <description>Joomla com_content plugin for WT SEO Meta templates</description>
     <namespace path="src">Joomla\Plugin\System\Wt_seo_meta_templates_content</namespace>
 	<scriptfile>script.php</scriptfile>
