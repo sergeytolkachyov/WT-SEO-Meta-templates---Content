@@ -2,7 +2,7 @@
 /**
  * @package     WT SEO Meta templates
  * @subpackage  WT SEO Meta templates - Content
- * @version     2.0.2
+ * @version     2.0.3
  * @Author      Sergey Tolkachyov, https://web-tolk.ru
  * @copyright   Copyright (C) 2022 Sergey Tolkachyov
  * @license     GNU/GPL http://www.gnu.org/licenses/gpl-2.0.html
@@ -65,7 +65,7 @@ final class Wt_seo_meta_templates_content extends CMSPlugin implements Subscribe
 		{
 			$main_plugin        = PluginHelper::getPlugin('system', 'wt_seo_meta_templates');
 			$main_plugin_params = new Registry($main_plugin->params);
-			$this->show_debug   = $main_plugin_params->get('show_debug');
+			$this->show_debug   = $main_plugin_params->get('show_debug', false);
 		}
 	}
 
@@ -328,6 +328,7 @@ final class Wt_seo_meta_templates_content extends CMSPlugin implements Subscribe
 					$article_intro_text = HTMLHelper::_('content.prepare', $article->introtext, '', 'com_content.article');
 					$article_intro_text = trim(strip_tags(html_entity_decode($article_intro_text, ENT_QUOTES, 'UTF-8')));
 					$article_intro_text = str_replace(["\r\n", "\r", "\n", "\t", '  ', '   '], ' ', $article_intro_text);
+                    $article_intro_text = htmlspecialchars($article_intro_text);
 
 					if ($intro_text_max_lenght > 3)
 					{

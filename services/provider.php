@@ -2,7 +2,7 @@
 /**
  * @package     WT SEO Meta templates
  * @subpackage  WT SEO Meta templates - Content
- * @version     2.0.2
+ * @version     2.0.3
  * @Author      Sergey Tolkachyov, https://web-tolk.ru
  * @copyright   Copyright (C) 2022 Sergey Tolkachyov
  * @license     GNU/GPL http://www.gnu.org/licenses/gpl-2.0.html
